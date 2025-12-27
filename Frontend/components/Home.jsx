@@ -10,6 +10,14 @@ const Home = () => {
     const [darkTheme,setDarkTheme]=useState(true);
     const val = '🌙';
 
+    const handleMouseEnter = (e, glowColor) => {
+        e.currentTarget.style.transform = "scale(1.05)";
+        if(darkTheme) e.currentTarget.style.boxShadow = `0 0 5px ${glowColor}, 0 0 10px ${glowColor}, 0 0 15px ${glowColor}`;
+    };
+    const handleMouseLeave = (e, glowColor) => {
+        e.currentTarget.style.transform = "scale(1)";
+        if(darkTheme) e.currentTarget.style.boxShadow = "none";
+    };
     const handleReview = async () => {
         if (!code.trim()) {
             alert('Please paste some code to review!');
@@ -70,21 +78,40 @@ const Home = () => {
     return (
         <div className="Full_Page" style={styles.fullPage}>
             <nav style={styles.nav}>
-                <h1 style={styles.logo}>🔍 AI Code Reviewer</h1>
+                <h1 style={{
+                        ...styles.logo,
+                        textShadow: darkTheme
+                        ? '0 0 0 1px rgba(255,255,255,0.1), 0 0 25px rgba(99,102,241,0.35)'
+                        : '0 4px 20px rgba(0,0,0,0.1)',
+                        transition: 'box-shadow 0.3s ease',
+                    }}
+                >🔍 AI Code Reviewer</h1>
                 <div style={styles.navButtons}>
                     <button 
                         onClick={handlePasteSample}
-                        style={styles.sampleBtn}
+                        style={{
+                            ...styles.sampleBtn,
+                            transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => handleMouseEnter(e, "#8BCD50")}
+                        onMouseLeave={(e) => handleMouseLeave(e, "#8BCD50")}
                         disabled={loading}
                     >
                         📋 Paste Sample
                     </button>
                     <button 
                         onClick={handleClear}
-                        style={styles.clearBtn}
+                        style={{
+                            ...styles.clearBtn,
+                            opacity: (loading || !code.trim()) ? 0.5 : 1,
+                            cursor: (loading || !code.trim()) ? 'not-allowed' : 'pointer',
+                            transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) =>handleMouseEnter(e, "#e43e15")}
+                        onMouseLeave={(e) => handleMouseLeave(e, "#e43e15")}
                         disabled={loading || !code.trim()}
                     >
-                        🗑️ Clear
+                       🗑️ Clear Code
                     </button>
                     <button 
                         onClick={handleReview}
@@ -94,6 +121,8 @@ const Home = () => {
                             opacity: (loading || !code.trim()) ? 0.5 : 1,
                             cursor: (loading || !code.trim()) ? 'not-allowed' : 'pointer'
                         }}
+                        onMouseEnter={(e) => handleMouseEnter(e, "rgb(252,194,0)")}
+                        onMouseLeave={(e) => handleMouseLeave(e, "rgb(252,194,0)")}
                     >
                         {loading ? '🔄 Reviewing...' : '🚀 Review Code'}
                     </button>
@@ -102,12 +131,33 @@ const Home = () => {
 
             <div style={styles.container}>
                 {/* Language Selector */}
-                <div style={styles.languageSelector}>
-                    <label style={styles.label}>Language:</label>
+                <div style={{
+                        ...styles.languageSelector,
+                        boxShadow: darkTheme
+                        ? '0 0 0 1px rgba(255,255,255,0.1), 0 0 25px rgba(99,102,241,0.35)'
+                        : '0 4px 20px rgba(0,0,0,0.1)',
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}
+                >
+                    <div>
+                    <label style={{
+                        ...styles.label,
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}>
+                    Language: </label>
                     <select 
                         value={language} 
                         onChange={(e) => setLanguage(e.target.value)}
-                        style={styles.select}
+                        style={{
+                            ...styles.select,
+                            background: darkTheme? 'black' : 'white',
+                            color: darkTheme? 'white' : 'black',
+                            transition: 'all 0.6s ease',
+                        }}
                         disabled={loading}
                     >
                         <option value="javascript">JavaScript</option>
@@ -121,10 +171,27 @@ const Home = () => {
                         <option value="go">Go</option>
                         <option value="rust">Rust</option>
                     </select>
+                    </div>
+                    <button onClick={() => setDarkTheme(prev => !prev)} style={{
+                        background: darkTheme? '#1a1a40' : 'linear-gradient(135deg, #66c7eaff 10%, #3b5fcbff 90%)',
+                        border: darkTheme? '2px solid #A998EE' : 'none',
+                        }} className="dark">
+                        {!darkTheme ? '🌙' : '☀️'}
+                    </button>
                 </div>
 
                 {/* Code Input Box */}
-                <div className="Code_Box" style={styles.codeBox}>
+                {/* <div className="Code_Box" style={styles.codeBox}> */}
+                <div className="Code_Box"
+                    style={{
+                        ...styles.codeBox,
+                        boxShadow: darkTheme
+                        ? '0 0 0 1px rgba(255,255,255,0.1), 0 0 25px rgba(99,102,241,0.35)'
+                        : '0 4px 20px rgba(0,0,0,0.1)',
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}>
                     <textarea
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
@@ -140,7 +207,12 @@ Tips:
 • Select the correct language
 • Click 'Review Code' to get instant feedback
 • No sign-up or login required!"
-                        style={styles.textarea}
+                        style={{
+                            ...styles.textarea,
+                            background: darkTheme? 'black' : 'white',
+                            color: darkTheme? 'white' : 'black',
+                            transition: 'all 0.6s ease',
+                        }}
                         disabled={loading}
                     />
                     
@@ -159,9 +231,27 @@ Tips:
                 </div>
 
                 {/* Instructions */}
-                <div style={styles.instructions}>
-                    <h3 style={styles.instructionTitle}>💡 How to use:</h3>
-                    <ul style={styles.instructionList}>
+                <div style={{
+                        ...styles.instructions,
+                        boxShadow: darkTheme
+                        ? '0 0 0 1px rgba(255,255,255,0.1), 0 0 25px rgba(99,102,241,0.35)'
+                        : '0 4px 20px rgba(0,0,0,0.1)',
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}>
+                    <h3 style={{
+                        ...styles.instructionTitle,
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}>💡 How to use:</h3>
+                    <ul style={{
+                        ...styles.instructionList,
+                        background: darkTheme? 'black' : 'white',
+                        color: darkTheme? 'white' : 'black',
+                        transition: 'all 0.6s ease',
+                    }}>
                         <li>1. Select your programming language from the dropdown</li>
                         <li>2. Paste your code in the editor above</li>
                         <li>3. Click "Review Code" to get instant AI feedback</li>
@@ -178,11 +268,16 @@ Tips:
 const styles = {
     fullPage: {
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #27f3f3ff 0%, #099e99ff 100%)',
+        background: 'linear-gradient(120deg, #3E004A 5% , rgb(39,64,139) 25% , #122620 70%)',
+        // background: darkTheme? '#1a1a40' : '#d3d3e6',
         fontFamily: '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', // ← Modern, readable font
+        margin:0,
+        padding : 0,
+        // overflow : hidden,
     },
     nav: {
-        background: 'white', // black
+        // background: darkTheme? '#1a1a40' : '#d3d3e6',
+        // background : 'rgb(39,64,139)',
         backdropFilter: 'blur(10px)',
         padding: '2rem 3rem',           // ← Bigger padding for desktop
         display: 'flex',
@@ -202,8 +297,9 @@ const styles = {
     },
     sampleBtn: {
         padding: '1rem 2rem',           // ← Bigger buttons
-        background: '#f3f4f6',
-        border: '2px solid #e5e7eb',
+        background: 'linear-gradient(135deg, #8BCD50 10% , #1D741B 80%)',
+        // background: darkTheme? '#1a1a40' : '#d3d3e6',
+        border: 'none',
         borderRadius: '12px',
         fontSize: '1.125rem',           // ← Bigger text
         fontWeight: '600',
@@ -212,18 +308,20 @@ const styles = {
     },
     clearBtn: {
         padding: '1rem 2rem',
-        background: '#fee2e2',
-        border: '2px solid #fecaca',
+        // background: '#de6040ff',
+        background: 'linear-gradient(135deg, #d56245ff 10% , #e43e15ff 80%)',
+        // border: '2px solid #fecaca',
+        border: 'none',
         borderRadius: '12px',
         fontSize: '1.125rem',
         fontWeight: '600',
-        color: '#991b1b',
+        color: '#660404ff',
         cursor: 'pointer',
         transition: 'all 0.3s ease',
     },
     reviewBtn: {
         padding: '1rem 2rem',
-        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        background: 'linear-gradient(135deg, rgb(252,194,0) 20%, rgb(227,38,54) 80%)',
         border: 'none',
         borderRadius: '12px',
         fontSize: '1.125rem',
@@ -239,11 +337,13 @@ const styles = {
         padding: '3rem 4rem',           // ← More padding
     },
     languageSelector: {
-        background: 'white',
+        background: 'black',
+        color: 'white',
         padding: '1.5rem 2rem',         // ← More padding
         borderRadius: '12px',
         marginBottom: '2rem',
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         gap: '1.5rem',
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
@@ -252,15 +352,17 @@ const styles = {
         // padding: '2px',
         fontSize: '1.125rem',           // ← Bigger text
         fontWeight: '600',
-        color: '#374151',
+        color: '#ffffffff',
     },
     select: {
-        padding: '0.5rem 1.25rem',    // ← Bigger select
+        padding: '0.75rem 0.5rem',    // ← Bigger select
         fontSize: '1.125rem',
         border: '2px solid #e5e7eb',
         borderRadius: '10px',
         cursor: 'pointer',
         outline: 'none',
+        background:'black',
+        color:'white',
         fontFamily: 'inherit',
     },
     // statusBadge: {
@@ -273,24 +375,28 @@ const styles = {
     //     fontWeight: '600',
     // },
     codeBox: {
-        background: 'white',
+        background: 'black',
         borderRadius: '16px',
-        padding: '2rem',               // ← More padding
+        padding: '1rem',               // ← More padding
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         marginBottom: '2rem',
     },
     textarea: {
-        width: '90%',
-        height: '600px',               // ← Much taller for desktop (was 400px)
+        width: '100%',                 // full width of codeBox minus padding
+        height: '35rem',               // ~560px, adjust as needed
         padding: '1.5rem',
-        fontSize: '1rem',              // ← Bigger text (was 0.95rem)
-        fontFamily: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace', // ← Better code font
-        lineHeight: '1.6',             // ← Better readability
-        border: '2px solid #e5e7eb',
-        borderRadius: '12px',
+        fontSize: '1rem',
+        background: 'black',
+        fontFamily: '"Cascadia Code", "Fira Code", Consolas, Monaco, monospace',
+        color: 'white',
+        lineHeight: '1.6',
+        border: '0.125rem solid #e5e7eb',  // 2px ≈ 0.125rem
+        borderRadius: '0.75rem',       // 12px ≈ 0.75rem
         resize: 'vertical',
         outline: 'none',
         transition: 'border-color 0.3s ease',
+        boxSizing: 'border-box',       // ✅ includes padding and border inside width/height
+        margin: '0',                   // remove default margin
     },
     footer: {
         marginTop: '1rem',
@@ -308,7 +414,8 @@ const styles = {
         fontWeight: '600',
     },
     instructions: {
-        background: 'rgba(255, 255, 255, 0.95)',
+        background:'black',
+        color:'white',
         backdropFilter: 'blur(10px)',
         padding: '2rem',               // ← More padding
         borderRadius: '16px',
@@ -317,7 +424,7 @@ const styles = {
     instructionTitle: {
         fontSize: '1.5rem',            // ← Bigger title
         fontWeight: '600',
-        color: '#374151',
+        color: 'white',
         marginBottom: '1.25rem',
     },
     instructionList: {
